@@ -33,7 +33,9 @@ Task
 I will collect data that includes important details like Age Sex Lab results Diagnosis Outcome and whether the patient was sent to a government hospital Yes or No
 Tools
 I will use Pandas a tool in Python to clean and remove unwanted data
+
 Steps
+
 1 I will load the data into a Pandas DataFrame which is like a big table.
 
 2 I will check for missing or incorrect values in the data.
@@ -174,7 +176,7 @@ Pandas is a tool in Python that helps us organize and change data It is similar 
 
 Why do we have to use Pandas for this step?
 
-We use Pandas because it helps us combine change and clean up our data in a way that makes it easier for the model to learn from it.
+We use Pandas because it helps us combine change and clean up our data in a way that makes it easier for the model to learn from it.
 
 Code
 
