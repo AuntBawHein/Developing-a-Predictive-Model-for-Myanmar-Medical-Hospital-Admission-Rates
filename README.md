@@ -5,7 +5,9 @@ Introduction
 
 In this project, I want to teach a computer to predict if a patient should be admitted to the hospital. I will use data like the patient’s age, test results, and health conditions. This will help doctors make faster decisions so that patients can receive the right care sooner.
 Python is the tool I will use for this project. It will follow my instructions to study the data and find patterns. After learning from the data, the computer will be able to make predictions on its own about whether a patient needs hospital admission.
+
 Goal of This Project
+
 The goal of this project is to help doctors make quick decisions about hospital admissions. The computer program will analyze patient data and make predictions, helping doctors identify who needs urgent care. This will allow patients to receive treatment faster.
 
 Step 1: Define Project / Scope
