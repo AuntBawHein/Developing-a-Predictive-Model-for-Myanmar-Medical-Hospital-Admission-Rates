@@ -62,19 +62,28 @@ We use Pandas because it makes it easier to collect, fix, and get the data ready
 Code
 
 ```python
-# Step 3: Look for missing values
+# Step 3: I look for missing values in my dataset
+# I check each column to see how many missing values it has
 missing_values = data.isnull().sum()
 print("\nMissing values in each column:\n", missing_values)
 
-# Step 4: Fix the missing values
+# Step 4: I fix (handle) the missing values in a smart way
+
+# I check if there is a column called 'Age\n(yr)'
 if 'Age\n(yr)' in data.columns:
+    # If yes, I fill the missing values in 'Age' with the average (mean) age
+    # This way, I don't lose any rows, and the replacement makes sense
     data['Age\n(yr)'] = data['Age\n(yr)'].fillna(data['Age\n(yr)'].mean())
     print("\nMissing values in 'Age' column have been filled with the average age.")
 
+# I check if there is a column called 'Lab result'
 if 'Lab result' in data.columns:
+    # If yes, I fill the missing values in 'Lab result' with the text 'Not available'
+    # This way, I keep track that some lab results were missing without confusing the model
     data['Lab result'] = data['Lab result'].fillna('Not available')
     print("\nMissing values in 'Lab result' column have been filled with 'Not available'.")
 ```
+
 What I’m going to do:
 
 [caseline list _dengue_as_csv_files.csv](https://github.com/user-attachments/files/19380798/caseline.list._dengue_as_csv_files.csv)
@@ -187,28 +196,41 @@ We use Pandas because it helps us combine change and clean up our data in a way 
 Code
 
 ```python
-import pandas as pd  # Importing pandas for data handling
+import pandas as pd  # I import pandas because I need it to handle and process my data easily
 
-# Handling missing values in numerical columns
+# I handle missing values in the numerical columns to make sure my model doesn't get confused by missing data (NaNs)
+
+# First, I check if the 'Age' column exists in my data
 if 'Age' in data.columns:
-    data['Age'].fillna(data['Age'].mean(), inplace=True)  # Replace missing Age values with the average
+    # If 'Age' exists, I fill any missing values with the average (mean) Age
+    # Using the mean ensures I don't lose any rows and that the replacement makes sense
+    data['Age'].fillna(data['Age'].mean(), inplace=True)
 
+# I check if the 'Lab_Result' column exists in my data
 if 'Lab_Result' in data.columns:
-    data['Lab_Result'].fillna(data['Lab_Result'].mean(), inplace=True)  # Replace missing Lab_Result values with the average
+    # If 'Lab_Result' exists, I fill any missing values with the average Lab_Result
+    # Again, I use the mean because it is simple and often works well for numerical data
+    data['Lab_Result'].fillna(data['Lab_Result'].mean(), inplace=True)
 
-# Creating a new feature by combining existing ones
+# I create a new feature by combining two existing ones
+# Sometimes multiplying two features together can reveal new patterns that a model can learn from
 if 'Age' in data.columns and 'Lab_Result' in data.columns:
-    data['Age_Lab_Result'] = data['Age'] * data['Lab_Result']  # Multiply Age and Lab_Result
+    data['Age_Lab_Result'] = data['Age'] * data['Lab_Result']  # I multiply Age and Lab_Result to create a new combined feature
 
-# Normalizing numerical features
+# I normalize my numerical features so that they are scaled between 0 and 1
+# Normalization helps many machine learning models learn better and faster because all input values are on a similar range
+
+# I normalize the 'Age' column
 if 'Age' in data.columns:
-    data['Age_normalized'] = (data['Age'] - data['Age'].min()) / (data['Age'].max() - data['Age'].min())  # Normalize Age to 0-1 scale
+    data['Age_normalized'] = (data['Age'] - data['Age'].min()) / (data['Age'].max() - data['Age'].min())  # I rescale Age to a 0-1 range
 
+# I normalize the 'Lab_Result' column
 if 'Lab_Result' in data.columns:
-    data['Lab_Result_normalized'] = (data['Lab_Result'] - data['Lab_Result'].min()) / (data['Lab_Result'].max() - data['Lab_Result'].min())  # Normalize Lab_Result to 0-1 scale
+    data['Lab_Result_normalized'] = (data['Lab_Result'] - data['Lab_Result'].min()) / (data['Lab_Result'].max() - data['Lab_Result'].min())  # I rescale Lab_Result to a 0-1 range
 
-# Display the first few rows of the modified dataset
-print(data.head())  # Show the first few rows to verify changes
+# Finally, I display the first few rows of my updated dataset
+# This helps me quickly check if everything looks correct before moving on
+print(data.head())
 ```
 
 Step 5 Data Splitting
@@ -261,17 +283,24 @@ Code
 from sklearn.model_selection import train_test_split 
 import pandas as pd  
 
-# Load the dataset
+# I load the dataset into a pandas DataFrame
+# This allows me to work with the data easily in table format
 data = pd.read_csv("Covid_vaccination_record_refugee_camp.csv")
 
-# Select Features (X) and Target (y)
-X = data[['Age', 'Section']]  # Features
-y = data['Missing Second Dose']  # Target
+# I select my features (X) — the columns that I will use to predict the target
+# 'Age' and 'Section' are the input variables I will use
+X = data[['Age', 'Section']]  # These are the features I want to feed into my model
 
-# Split the data into training (80%) and testing (20%)
+# I select my target variable (y) — this is what I am trying to predict
+# 'Missing Second Dose' tells me whether a person missed their second vaccine dose
+y = data['Missing Second Dose']
+
+# I split my dataset into training and testing sets
+# I use 80% of the data to train my model and 20% to test it later and see how well it performs
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Print the size of the training and testing sets
+# I print out the size of my training and testing datasets
+# This helps me quickly confirm that the split happened correctly
 print(f"Training data size: {len(X_train)} rows")
 print(f"Testing data size: {len(X_test)} rows")
 ```
@@ -358,24 +387,28 @@ from sklearn.preprocessing import StandardScaler
 # If some data points are missing, I can fill them in automatically using a strategy like taking the median
 from sklearn.impute import SimpleImputer
 
-# Handle missing values
+# I handle missing values in my feature set
+# If any values are missing, I fill them with the median value of that column
+# Using the median is a good idea because it is not affected by extreme values (outliers)
 imputer = SimpleImputer(strategy='median')
-X_train = imputer.fit_transform(X_train)
-X_test = imputer.transform(X_test)
+X_train = imputer.fit_transform(X_train)  # I fit the imputer on the training data and transform it
+X_test = imputer.transform(X_test)        # I use the same transformation on the test data
 
-# Scale the data
+# I scale (normalize) my feature data
+# Scaling helps the model perform better by putting all features on a similar range
 scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+X_train = scaler.fit_transform(X_train)  # I fit the scaler on the training data and transform it
+X_test = scaler.transform(X_test)        # I transform the test data using the same scaler
 
-# Train the model
+# I create a Logistic Regression model
+# Logistic Regression is a good starting point for binary classification tasks
 model = LogisticRegression(max_iter=1000)
-model.fit(X_train, y_train)
+model.fit(X_train, y_train)  # I train the model using my training data
 
-# Make predictions
+# I use the trained model to make predictions on the test set
 y_pred = model.predict(X_test)
 
-# Check accuracy
+# I check how accurate my model is by comparing the predictions to the true labels
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Model Accuracy: {accuracy * 100:.2f}%")
 ```
@@ -453,18 +486,20 @@ from xgboost import XGBClassifier
 # I import the accuracy_score function so I can evaluate how well my model's predictions match the true labels
 from sklearn.metrics import accuracy_score
 
-
-# Create and train the XGBoost model
+# I create an XGBoost model for classification
+# I set the learning rate (how fast the model learns) to 0.1 and the number of trees (n_estimators) to 100
 xgb_model = XGBClassifier(learning_rate=0.1, n_estimators=100)
+
+# I train (fit) the XGBoost model using my encoded training data
 xgb_model.fit(X_train_encoded, y_train)
 
-# Make predictions
+# I use the trained model to make predictions on the encoded test set
 y_pred = xgb_model.predict(X_test_encoded)
 
-# Calculate accuracy
+# I calculate how accurate my model's predictions are by comparing them to the true labels
 accuracy = accuracy_score(y_test, y_pred)
 
-# Print the accuracy
+# I print out the model's accuracy so I can see how well it performed
 print(f"XGBoost Model Accuracy: {accuracy * 100:.2f}%")
 ```
 
@@ -539,27 +574,33 @@ from tensorflow.keras.layers import Dense, Input
 # I import the accuracy_score function so I can later check how well my neural network performs on the test data
 from sklearn.metrics import accuracy_score
 
-
-# Build the neural network model
+# I build my neural network model using Keras's Sequential API
+# Sequential means I will add one layer after another in order
 model = Sequential([
-    Input(shape=(X_train_encoded.shape[1],)),
-    Dense(16, activation='relu'),
-    Dense(16, activation='relu'),
-    Dense(1, activation='sigmoid')
+    Input(shape=(X_train_encoded.shape[1],)),  # I define the input shape based on the number of features
+    Dense(16, activation='relu'),  # I add the first hidden layer with 16 neurons and ReLU activation
+    Dense(16, activation='relu'),  # I add another hidden layer with 16 neurons and ReLU activation
+    Dense(1, activation='sigmoid')  # I add the output layer with 1 neuron and sigmoid activation for binary classification
 ])
 
-# Compile the model
+# I compile the model
+# I use binary crossentropy because I am solving a binary classification problem
+# I use the Adam optimizer because it usually works very well without much tuning
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Train the model
+# I train (fit) the model on my training data
+# I run the training for 10 full passes over the data (epochs) and use a batch size of 32
 model.fit(X_train_encoded, y_train, epochs=10, batch_size=32, verbose=1)
 
-# Make predictions
+# I make predictions on the test set
+# The model outputs probabilities (values between 0 and 1), so I need to convert them into binary labels (0 or 1)
 y_pred = model.predict(X_test_encoded)
-y_pred_binary = [1 if pred > 0.5 else 0 for pred in y_pred]
+y_pred_binary = [1 if pred > 0.5 else 0 for pred in y_pred]  # I use 0.5 as the threshold to decide between classes
 
-# Calculate accuracy
+# I calculate the accuracy of my neural network by comparing predictions to true labels
 accuracy = accuracy_score(y_test, y_pred_binary)
+
+# I print the final model accuracy so I can see how well my neural network performed
 print(f"Model Accuracy: {accuracy * 100:.2f}%")
 ```
 
@@ -664,13 +705,20 @@ I’m going to compare how often the model was right or wrong by using a table t
 Code
 
 ```python
-# Evaluate the Model
+# I import the necessary functions to evaluate my model's performance
+# classification_report gives me detailed metrics like precision, recall, and F1-score
+# roc_auc_score gives me a measure of how well the model separates the two classes
 from sklearn.metrics import classification_report, roc_auc_score
 
+# I print a detailed performance report of my model
 print("Model Performance:")
-print(classification_report(y_test, y_pred_binary))
+print(classification_report(y_test, y_pred_binary))  # I generate a classification report comparing true vs predicted labels
 
+# I calculate the AUC-ROC score
+# AUC-ROC tells me how good my model is at distinguishing between the two classes across different thresholds
 auc = roc_auc_score(y_test, y_pred_binary)
+
+# I print the AUC-ROC score to better understand how well my model is performing overall
 print(f"AUC-ROC Score: {auc:.2f}")
 ```
 
