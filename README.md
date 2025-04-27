@@ -61,6 +61,7 @@ We use Pandas because it makes it easier to collect, fix, and get the data ready
 
 Code
 
+```python
 # Step 3: Look for missing values
 missing_values = data.isnull().sum()
 print("\nMissing values in each column:\n", missing_values)
@@ -72,8 +73,8 @@ if 'Age\n(yr)' in data.columns:
 
 if 'Lab result' in data.columns:
     data['Lab result'] = data['Lab result'].fillna('Not available')
-print("\nMissing values in 'Lab result' column have been filled with 'Not available'.")
-
+    print("\nMissing values in 'Lab result' column have been filled with 'Not available'.")
+```
 What I’m going to do:
 
 [caseline list _dengue_as_csv_files.csv](https://github.com/user-attachments/files/19380798/caseline.list._dengue_as_csv_files.csv)
@@ -128,13 +129,15 @@ I use Seaborn because it helps create clearer and more colorful charts Heatmaps 
 
 Code
 
+```python
 # Step 3: Checking the distribution of Age
-plt.figure(figsize=(10, 6))  # Set chart size
-sns.histplot(data['Age'], bins=10, kde=True)  # Create histogram to show age distribution
-plt.title("Distribution of Age (Myanmar Medical Data)")  # Add title
-plt.xlabel("Age (Years)")  # Label x-axis
-plt.ylabel("Number of People")  # Label y-axis
-plt.show()  # Show the chart
+plt.figure(figsize=(10, 6))  # I set the chart size so it's big enough to see
+sns.histplot(data['Age'], bins=10, kde=True)  # I create a histogram to show how ages are spread out
+plt.title("Distribution of Age (Myanmar Medical Data)")  # I add a title to explain the chart
+plt.xlabel("Age (Years)")  # I label the x-axis to show it's about people's ages
+plt.ylabel("Number of People")  # I label the y-axis to show how many people there are
+plt.show()  # I show the chart
+```
 
 ![image](https://github.com/user-attachments/assets/2c9fcf53-5ece-4fd9-b7d8-70718d24b11a)
 ![image](https://github.com/user-attachments/assets/c80f341f-962e-43b1-854e-e009475da7bb)
@@ -183,6 +186,7 @@ We use Pandas because it helps us combine change and clean up our data in a way 
 
 Code
 
+```python
 import pandas as pd  # Importing pandas for data handling
 
 # Handling missing values in numerical columns
@@ -198,13 +202,14 @@ if 'Age' in data.columns and 'Lab_Result' in data.columns:
 
 # Normalizing numerical features
 if 'Age' in data.columns:
-    data['Age_normalized'] = (data['Age'] - data['Age'].min()) / (data['Age'].max() - data['Age'].min())
+    data['Age_normalized'] = (data['Age'] - data['Age'].min()) / (data['Age'].max() - data['Age'].min())  # Normalize Age to 0-1 scale
 
 if 'Lab_Result' in data.columns:
-    data['Lab_Result_normalized'] = (data['Lab_Result'] - data['Lab_Result'].min()) / (data['Lab_Result'].max() - data['Lab_Result'].min())
+    data['Lab_Result_normalized'] = (data['Lab_Result'] - data['Lab_Result'].min()) / (data['Lab_Result'].max() - data['Lab_Result'].min())  # Normalize Lab_Result to 0-1 scale
 
 # Display the first few rows of the modified dataset
 print(data.head())  # Show the first few rows to verify changes
+```
 
 Step 5 Data Splitting
 
@@ -251,6 +256,7 @@ We use train test split because it automatically splits the data into two parts 
 
 Code
 
+```python
 from sklearn.model_selection import train_test_split 
 import pandas as pd 
 
@@ -267,6 +273,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # Print the size of the training and testing sets
 print(f"Training data size: {len(X_train)} rows")
 print(f"Testing data size: {len(X_test)} rows")
+```
 
 ![image](https://github.com/user-attachments/assets/f883d4ad-9d39-42b8-a5d1-7d55a48e0131)
 
@@ -335,6 +342,7 @@ Pandas helps us load and prepare the data for training and testing.
 
 Code 
 
+```python
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
@@ -360,6 +368,7 @@ y_pred = model.predict(X_test)
 # Check accuracy
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Model Accuracy: {accuracy * 100:.2f}%")
+```
 
 ![image](https://github.com/user-attachments/assets/bf6efc22-637f-4f02-9269-ef89469837f4)
 
@@ -426,6 +435,7 @@ It compares the model’s predictions to the actual results and gives us a score
 
 Code 
 
+```python
 from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score
 
@@ -441,6 +451,7 @@ accuracy = accuracy_score(y_test, y_pred)
 
 # Print the accuracy
 print(f"XGBoost Model Accuracy: {accuracy * 100:.2f}%")
+```
 
 ![image](https://github.com/user-attachments/assets/f2c3036e-098d-45fb-986a-2a7eec29b55f)
 
@@ -501,6 +512,7 @@ I use accuracy_score to measure how well the model is making predictions It comp
 
 Code
 
+```python
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Input
 from sklearn.metrics import accuracy_score
@@ -526,6 +538,7 @@ y_pred_binary = [1 if pred > 0.5 else 0 for pred in y_pred]
 # Calculate accuracy
 accuracy = accuracy_score(y_test, y_pred_binary)
 print(f"Model Accuracy: {accuracy * 100:.2f}%")
+```
 
 ![image](https://github.com/user-attachments/assets/3b3f9656-8b89-4162-a22f-022bc077465e)
 
@@ -627,6 +640,7 @@ I’m going to compare how often the model was right or wrong by using a table t
 
 Code
 
+```python
 # Evaluate the Model
 from sklearn.metrics import classification_report, roc_auc_score
 
@@ -635,6 +649,7 @@ print(classification_report(y_test, y_pred_binary))
 
 auc = roc_auc_score(y_test, y_pred_binary)
 print(f"AUC-ROC Score: {auc:.2f}")
+```
 
 ![image](https://github.com/user-attachments/assets/7d33225c-19cb-46ee-9f85-552b0396fa61)
 ![image](https://github.com/user-attachments/assets/b684896e-4e4c-40b7-9af2-6f05c66d9033)
