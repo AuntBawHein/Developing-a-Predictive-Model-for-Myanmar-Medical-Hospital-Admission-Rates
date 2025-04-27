@@ -257,8 +257,9 @@ We use train test split because it automatically splits the data into two parts 
 Code
 
 ```python
+# I import the libraries I need to work with data and split it into training and testing sets
 from sklearn.model_selection import train_test_split 
-import pandas as pd 
+import pandas as pd  
 
 # Load the dataset
 data = pd.read_csv("Covid_vaccination_record_refugee_camp.csv")
@@ -343,9 +344,18 @@ Pandas helps us load and prepare the data for training and testing.
 Code 
 
 ```python
+# I import the Logistic Regression model because I want to perform classification
 from sklearn.linear_model import LogisticRegression
+
+# I import the accuracy_score function so I can measure how good my model is
 from sklearn.metrics import accuracy_score
+
+# I import StandardScaler because I need to scale my feature values
+# Scaling makes sure that large numbers don't dominate smaller ones during model training
 from sklearn.preprocessing import StandardScaler
+
+# I import SimpleImputer because I want to handle missing values in my dataset
+# If some data points are missing, I can fill them in automatically using a strategy like taking the median
 from sklearn.impute import SimpleImputer
 
 # Handle missing values
@@ -436,8 +446,13 @@ It compares the model’s predictions to the actual results and gives us a score
 Code 
 
 ```python
+# I import the XGBClassifier, which is an advanced and powerful model based on decision trees
+# I will use it to perform classification and (hopefully) get even better accuracy
 from xgboost import XGBClassifier
+
+# I import the accuracy_score function so I can evaluate how well my model's predictions match the true labels
 from sklearn.metrics import accuracy_score
+
 
 # Create and train the XGBoost model
 xgb_model = XGBClassifier(learning_rate=0.1, n_estimators=100)
@@ -513,9 +528,17 @@ I use accuracy_score to measure how well the model is making predictions It comp
 Code
 
 ```python
+# I import the Sequential model from Keras because I want to build my neural network step-by-step, layer-by-layer
 from tensorflow.keras.models import Sequential
+
+# I import Dense and Input layers to define the structure of my neural network
+# 'Input' defines how the data comes into the model
+# 'Dense' creates fully connected layers, where every neuron is connected to every neuron in the next layer
 from tensorflow.keras.layers import Dense, Input
+
+# I import the accuracy_score function so I can later check how well my neural network performs on the test data
 from sklearn.metrics import accuracy_score
+
 
 # Build the neural network model
 model = Sequential([
